@@ -1,0 +1,33 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    /* Dark mode base styles */
+    .dark {
+        color-scheme: dark;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-brand text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-brand-dark transition-all;
+    }
+    .btn-outline {
+        @apply border border-gray-200 text-gray-500 px-4 py-2 rounded-lg font-semibold text-sm hover:border-brand hover:text-brand transition-all;
+    }
+    .card {
+        @apply bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-sm;
+    }
+    .badge-green  { @apply bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-xs font-bold px-2 py-0.5 rounded-full; }
+    .badge-red    { @apply bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs font-bold px-2 py-0.5 rounded-full; }
+    .badge-blue   { @apply bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-bold px-2 py-0.5 rounded-full; }
+    .badge-yellow { @apply bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs font-bold px-2 py-0.5 rounded-full; }
+}
+
