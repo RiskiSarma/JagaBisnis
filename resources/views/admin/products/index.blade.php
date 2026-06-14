@@ -40,8 +40,19 @@
 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     @forelse($products as $product)
     <div class="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl overflow-hidden hover:-translate-y-0.5 transition-all duration-200 hover:shadow-lg group">
-        {{-- Color bar --}}
-        <div class="h-1.5" style="background:{{ $product->color ?? '#1A56DB' }}"></div>
+        {{-- Product Image / Color bar fallback --}}
+        @if($product->image)
+            <div class="relative w-full aspect-square bg-slate-100 dark:bg-slate-900 overflow-hidden">
+                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                     class="w-full h-full object-cover">
+                <div class="absolute top-0 left-0 right-0 h-1" style="background:{{ $product->color ?? '#1A56DB' }}"></div>
+            </div>
+        @else
+            <div class="relative w-full aspect-square bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 dark:text-slate-600"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                <div class="absolute top-0 left-0 right-0 h-1" style="background:{{ $product->color ?? '#1A56DB' }}"></div>
+            </div>
+        @endif
         <div class="p-4">
             {{-- Category --}}
             <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">{{ $product->category }}</p>
@@ -75,7 +86,7 @@
             @endif
             {{-- Actions --}}
             <div class="flex gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
-                <button onclick="openEditProduct({{ $product->id }},'{{ addslashes($product->name) }}',{{ $product->price }},{{ $product->stock ?? 0 }},'{{ $product->stock_mode }}','{{ addslashes($product->category) }}','{{ $product->color ?? '#1A56DB' }}')"
+                <button onclick="openEditProduct({{ $product->id }},'{{ addslashes($product->name) }}',{{ $product->price }},{{ $product->stock ?? 0 }},'{{ $product->stock_mode }}','{{ addslashes($product->category) }}','{{ $product->color ?? '#1A56DB' }}','{{ $product->image ? asset('storage/'.$product->image) : '' }}')"
                     class="flex-1 inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-brand hover:text-brand hover:bg-brand/5 transition-all">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     Edit
@@ -108,7 +119,7 @@
 {{-- ══ MODAL: Tambah Produk ══ --}}
 <div id="modal-add-product" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <form action="{{ route('admin.products.store') }}" method="POST">
+        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             {{-- Modal header --}}
             <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-slate-100 dark:border-slate-700">
@@ -124,6 +135,25 @@
                 </button>
             </div>
             <div class="px-6 py-5 space-y-4">
+                {{-- Upload Gambar --}}
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Foto Produk</label>
+                    <div class="flex items-center gap-3">
+                        <div id="add-preview-wrap" class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 flex items-center justify-center overflow-hidden shrink-0">
+                            <img id="add-preview-img" class="hidden w-full h-full object-cover" alt="preview">
+                            <svg id="add-preview-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 dark:text-slate-600"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <input type="file" name="image" accept="image/png,image/jpeg,image/jpg,image/webp"
+                                onchange="previewImage(this,'add-preview-img','add-preview-icon')"
+                                class="w-full text-xs text-slate-500 dark:text-slate-400
+                                    file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0
+                                    file:text-xs file:font-semibold file:bg-brand/10 file:text-brand
+                                    hover:file:bg-brand/20 file:cursor-pointer cursor-pointer">
+                            <p class="text-[10px] text-slate-400 mt-1">Maks 1MB. Gambar otomatis dikompres.</p>
+                        </div>
+                    </div>
+                </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Nama Produk</label>
                     <input type="text" name="name" required placeholder="cth: Es Kopi Susu"
@@ -144,8 +174,20 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Kategori</label>
-                        <input type="text" name="category" required placeholder="Minuman"
+                        <select name="category" id="add-category-select" required
+                            onchange="toggleNewCategory(this,'add-new-category-wrap','add-new-category-input')"
                             class="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all">
+                            <option value="">— Pilih Kategori —</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat }}">{{ $cat }}</option>
+                            @endforeach
+                            <option value="__new__">+ Kategori Baru...</option>
+                        </select>
+                        <div id="add-new-category-wrap" class="hidden mt-2">
+                            <input type="text" id="add-new-category-input" placeholder="Nama kategori baru"
+                                oninput="syncNewCategory(this,'add-category-select')"
+                                class="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Warna Label</label>
@@ -196,7 +238,7 @@
 {{-- ══ MODAL: Edit Produk ══ --}}
 <div id="modal-edit-product" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <form id="form-edit-product" method="POST">
+        <form id="form-edit-product" method="POST" enctype="multipart/form-data">
             @csrf @method('PUT')
             <div class="flex items-center justify-between px-6 pt-5 pb-4 border-b border-slate-100 dark:border-slate-700">
                 <div class="flex items-center gap-3">
@@ -211,6 +253,31 @@
                 </button>
             </div>
             <div class="px-6 py-5 space-y-4">
+                {{-- Upload Gambar --}}
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Foto Produk</label>
+                    <div class="flex items-center gap-3">
+                        <div id="edit-preview-wrap" class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 flex items-center justify-center overflow-hidden shrink-0 relative">
+                            <img id="edit-preview-img" class="hidden w-full h-full object-cover" alt="preview">
+                            <svg id="edit-preview-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 dark:text-slate-600"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <input type="file" name="image" accept="image/png,image/jpeg,image/jpg,image/webp"
+                                onchange="previewImage(this,'edit-preview-img','edit-preview-icon'); document.getElementById('ep-remove-image').checked=false;"
+                                class="w-full text-xs text-slate-500 dark:text-slate-400
+                                    file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0
+                                    file:text-xs file:font-semibold file:bg-brand/10 file:text-brand
+                                    hover:file:bg-brand/20 file:cursor-pointer cursor-pointer">
+                            <label class="flex items-center gap-1.5 mt-1.5 text-[11px] text-slate-500 dark:text-slate-400 cursor-pointer">
+                                <input type="checkbox" id="ep-remove-image" name="remove_image" value="1"
+                                    onchange="if(this.checked){document.getElementById('edit-preview-img').classList.add('hidden');document.getElementById('edit-preview-icon').classList.remove('hidden');}"
+                                    class="rounded border-slate-300 text-red-500 focus:ring-red-400">
+                                Hapus gambar saat ini
+                            </label>
+                            <p class="text-[10px] text-slate-400 mt-1">Maks 1MB. Gambar otomatis dikompres.</p>
+                        </div>
+                    </div>
+                </div>
                 <div>
                     <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Nama Produk</label>
                     <input type="text" id="ep-name" name="name" required
@@ -231,8 +298,20 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Kategori</label>
-                        <input type="text" id="ep-category" name="category" required
+                        <select id="ep-category-select" name="category" required
+                            onchange="toggleNewCategory(this,'edit-new-category-wrap','edit-new-category-input')"
                             class="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all">
+                            <option value="">— Pilih Kategori —</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat }}">{{ $cat }}</option>
+                            @endforeach
+                            <option value="__new__">+ Kategori Baru...</option>
+                        </select>
+                        <div id="edit-new-category-wrap" class="hidden mt-2">
+                            <input type="text" id="edit-new-category-input" placeholder="Nama kategori baru"
+                                oninput="syncNewCategory(this,'ep-category-select')"
+                                class="w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand/40 focus:border-brand transition-all">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5">Warna Label</label>
@@ -277,17 +356,101 @@
 
 @push('scripts')
 <script>
-function openEditProduct(id, name, price, stock, mode, category, color) {
-    document.getElementById('ep-name').value     = name;
-    document.getElementById('ep-price').value    = price;
-    document.getElementById('ep-stock').value    = stock;
-    document.getElementById('ep-category').value = category;
-    document.getElementById('ep-color').value    = color;
+function previewImage(input, imgId, iconId) {
+    const file = input.files[0];
+    const img = document.getElementById(imgId);
+    const icon = document.getElementById(iconId);
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        img.src = e.target.result;
+        img.classList.remove('hidden');
+        icon.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+function toggleNewCategory(select, wrapId, inputId) {
+    const wrap = document.getElementById(wrapId);
+    const input = document.getElementById(inputId);
+    if (select.value === '__new__') {
+        wrap.classList.remove('hidden');
+        input.required = true;
+        input.value = '';
+        input.focus();
+    } else {
+        wrap.classList.add('hidden');
+        input.required = false;
+        input.value = '';
+    }
+}
+
+function syncNewCategory(input, selectId) {
+    const select = document.getElementById(selectId);
+    let tempOption = select.querySelector('option[data-temp="1"]');
+    if (!tempOption) {
+        tempOption = document.createElement('option');
+        tempOption.setAttribute('data-temp', '1');
+        select.appendChild(tempOption);
+    }
+    tempOption.value = input.value;
+    tempOption.textContent = input.value;
+    tempOption.selected = true;
+}
+
+function openEditProduct(id, name, price, stock, mode, category, color, imageUrl) {
+    document.getElementById('ep-name').value  = name;
+    document.getElementById('ep-price').value = price;
+    document.getElementById('ep-stock').value = stock;
+
+    const catSelect = document.getElementById('ep-category-select');
+    const newWrap   = document.getElementById('edit-new-category-wrap');
+    const newInput  = document.getElementById('edit-new-category-input');
+
+    // bersihkan opsi sementara lama
+    const oldTemp = catSelect.querySelector('option[data-temp="1"]');
+    if (oldTemp) oldTemp.remove();
+
+    newInput.value = '';
+    newWrap.classList.add('hidden');
+    newInput.required = false;
+
+    const existingOption = [...catSelect.options].find(o => o.value === category);
+    if (existingOption) {
+        catSelect.value = category;
+    } else {
+        // kategori produk ini tidak ada di list -> buat opsi sementara
+        const tempOption = document.createElement('option');
+        tempOption.setAttribute('data-temp', '1');
+        tempOption.value = category;
+        tempOption.textContent = category;
+        catSelect.appendChild(tempOption);
+        catSelect.value = category;
+    }
+
+    document.getElementById('ep-color').value = color;
     const radio = document.getElementById('ep-mode-' + mode);
     if (radio) radio.checked = true;
+
+    document.getElementById('ep-remove-image').checked = false;
+    const previewImg  = document.getElementById('edit-preview-img');
+    const previewIcon = document.getElementById('edit-preview-icon');
+    const fileInput   = document.querySelector('#form-edit-product input[name="image"]');
+    fileInput.value = '';
+
+    if (imageUrl) {
+        previewImg.src = imageUrl;
+        previewImg.classList.remove('hidden');
+        previewIcon.classList.add('hidden');
+    } else {
+        previewImg.classList.add('hidden');
+        previewIcon.classList.remove('hidden');
+    }
+
     document.getElementById('form-edit-product').action = '/admin/products/' + id;
     document.getElementById('modal-edit-product').classList.remove('hidden');
 }
+
 ['modal-add-product','modal-edit-product'].forEach(id => {
     document.getElementById(id).addEventListener('click', function(e) {
         if (e.target === this) this.classList.add('hidden');

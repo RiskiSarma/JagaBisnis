@@ -71,9 +71,19 @@
                     <span x-show="product.out"
                           class="absolute top-1.5 right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">HABIS</span>
  
-                    {{-- Color bar --}}
-                    <div class="h-1 rounded-full mb-2 mx-2" :style="'background:' + product.color"></div>
- 
+                    {{-- Gambar produk --}}
+                    <div class="relative w-full aspect-square rounded-lg overflow-hidden mb-2 bg-slate-100 dark:bg-slate-700">
+                        <template x-if="product.image_url">
+                            <img :src="product.image_url" :alt="product.name" class="w-full h-full object-cover">
+                        </template>
+                        <template x-if="!product.image_url">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-slate-300 dark:text-slate-500" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            </div>
+                        </template>
+                        <div class="absolute top-0 left-0 right-0 h-1" :style="'background:' + product.color"></div>
+                    </div>
+
                     <p x-text="product.category" class="text-[9px] text-slate-400 dark:text-slate-500 uppercase font-bold mb-0.5"></p>
                     <p x-text="product.name" class="text-xs font-bold text-slate-900 dark:text-white leading-tight mb-1"></p>
                     <p x-text="formatRp(product.price)" class="text-sm font-extrabold text-brand"></p>

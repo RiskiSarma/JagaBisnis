@@ -11,8 +11,9 @@ class Product extends Model
 
     protected $fillable = [
         'business_id', 'name', 'price', 'stock',
-        'stock_mode', 'category', 'color',
+        'stock_mode', 'category', 'image', 'color',
     ];
+    protected $appends = ['image_url'];
 
     public function business()
     {
@@ -37,6 +38,10 @@ class Product extends Model
     }
     public function scopeForBusiness($q, int $bizId) { 
         return $q->where('business_id', $bizId); 
+    }
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
     }
 }
 ?>
