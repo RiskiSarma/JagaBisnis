@@ -32,4 +32,10 @@ class DashboardController extends Controller
             'businesses', 'totalRevenue', 'totalTx', 'totalUsers', 'revenueByBiz'
         ));
     }
+    public function syncRevenue()
+    {
+        $count = Business::recalculateAll();
+        
+        return back()->with('success', "Berhasil menyinkronkan revenue untuk {$count->count()} bisnis.");
+    }
 }

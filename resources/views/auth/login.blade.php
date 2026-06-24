@@ -367,6 +367,16 @@
                     Pusat Bantuan
                 </a>
             </div>
+
+            <div style="margin-top:16px;text-align:center">
+                <p style="color:rgba(255,255,255,0.35);font-size:13px;margin-bottom:10px">
+                    Belum punya akun bisnis?
+                </p>
+                <a href="{{ route('register') }}" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);font-size:13px;font-weight:600;text-decoration:none;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='rgba(255,255,255,0.75)'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                    Daftar Bisnis Baru
+                </a>
+            </div>
         </div>
     </div>
 

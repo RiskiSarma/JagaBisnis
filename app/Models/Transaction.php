@@ -10,7 +10,10 @@ class Transaction extends Model
         'business_id', 'user_id', 'customer_id',
         'items', 'subtotal', 'discount', 'total',
         'pay_method', 'cash_received', 'cash_change',
-        'status', 'catatan',
+        'status', 'catatan', 'payment_gateway',
+        'midtrans_order_id', 'midtrans_transaction_id',
+        'snap_token', 'midtrans_payment_type',
+        'customer_name','payment_method',
     ];
 
     protected $casts = [

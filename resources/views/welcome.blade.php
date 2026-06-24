@@ -1050,6 +1050,11 @@
             .hero h1 { font-size: 32px; }
             .btn-hero-primary, .btn-hero-secondary { padding: 14px 24px; font-size: 14px; }
         }
+        @media (max-width: 768px) {
+            .pricing-grid-resp {
+                grid-template-columns: 1fr !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1064,7 +1069,7 @@
     <ul class="nav-links">
         <li><a href="#fitur">Fitur</a></li>
         <li><a href="#cara-kerja">Cara Kerja</a></li>
-        <li><a href="#role">Akses</a></li>
+        <li><a href="#harga">Harga</a></li>
         <li><a href="#testimoni">Testimoni</a></li>
     </ul>
 
@@ -1082,7 +1087,7 @@
 <div class="mobile-menu" id="mobileMenu">
     <a href="#fitur" onclick="closeMobileMenu()">Fitur</a>
     <a href="#cara-kerja" onclick="closeMobileMenu()">Cara Kerja</a>
-    <a href="#role" onclick="closeMobileMenu()">Akses</a>
+    <a href="#harga" onclick="closeMobileMenu()">Harga</a>
     <a href="#testimoni" onclick="closeMobileMenu()">Testimoni</a>
     <a href="{{ route('login') }}" style="color:#60a5fa;font-weight:700">Masuk ke Sistem →</a>
 </div>
@@ -1126,7 +1131,7 @@
             </div>
             <div class="hero-stat">
                 <div class="hero-stat-num">3</div>
-                <div class="hero-stat-label">Level Akses</div>
+                <div class="hero-stat-label">Paket Harga</div>
             </div>
             <div class="hero-stat">
                 <div class="hero-stat-num">99.9%</div>
@@ -1328,62 +1333,82 @@
     </div>
 </section>
 
-<!-- ── ROLES ── -->
-<section class="roles-section" id="role">
+<!-- ── PRICING ── -->
+<section class="roles-section" id="harga">
     <div class="container">
         <div class="reveal" style="text-align:center;margin-bottom:20px">
-            <div class="section-eyebrow" style="color:#60a5fa;justify-content:center">✦ Level Akses</div>
-            <h2 class="section-title">Tiga Peran, Satu Sistem</h2>
-            <p class="section-desc" style="margin:0 auto">Setiap pengguna mendapat tampilan dan akses yang sesuai dengan perannya — tidak lebih, tidak kurang.</p>
+            <div class="section-eyebrow" style="color:#60a5fa;justify-content:center">✦ Paket Harga</div>
+            <h2 class="section-title">Harga Transparan, Tanpa Kejutan</h2>
+            <p class="section-desc" style="margin:0 auto">Mulai gratis, upgrade kapan saja. Semua paket sudah termasuk support Bahasa Indonesia.</p>
         </div>
 
-        <div class="roles-grid">
-            <!-- Super Admin -->
-            <div class="role-card reveal" style="transition-delay:0.1s;border-color:rgba(245,158,11,0.3)">
-                <div class="role-icon" style="background:rgba(245,158,11,0.12)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px" class="pricing-grid-resp">
+
+            <!-- Starter -->
+            <div class="role-card reveal" style="transition-delay:0.1s;border-color:rgba(255,255,255,0.1);position:relative">
+                <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">Starter</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px">Untuk bisnis yang baru mulai</div>
+                <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:4px">
+                    <span style="font-size:15px;font-weight:700;color:#fff">Rp</span>
+                    <span style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1">0</span>
                 </div>
-                <div class="role-badge" style="background:rgba(245,158,11,0.12);color:#F59E0B">⚡ Super Admin</div>
-                <div class="role-title">Super Admin</div>
-                <ul class="role-features">
-                    <li>Kelola semua bisnis dalam satu platform</li>
-                    <li>Buat & nonaktifkan bisnis kapan saja</li>
-                    <li>Atur fitur per bisnis (stok, loyalty, dll)</li>
-                    <li>Pantau pengguna dan aktivitas seluruh sistem</li>
-                    <li>Dashboard monitoring global</li>
+                <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:4px">/ bulan, selamanya gratis</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:24px">1 kasir · 1 bisnis · 100 produk</div>
+                <div style="height:1px;background:rgba(255,255,255,0.07);margin-bottom:20px"></div>
+                <ul class="role-features" style="margin-bottom:28px">
+                    <li>Kasir dasar (transaksi unlimited)</li>
+                    <li>Manajemen stok sederhana</li>
+                    <li>Laporan harian</li>
+                    <li>Cetak struk thermal</li>
+                    <li>1 akun kasir</li>
                 </ul>
+                <a href="{{ route('register') }}" style="display:block;width:100%;padding:12px;text-align:center;border-radius:10px;font-size:14px;font-weight:700;color:#60a5fa;border:1.5px solid rgba(96,165,250,0.4);text-decoration:none;transition:all 0.2s;background:transparent" onmouseover="this.style.background='rgba(96,165,250,0.1)'" onmouseout="this.style.background='transparent'">Mulai Gratis</a>
             </div>
 
-            <!-- Manager / Admin -->
-            <div class="role-card reveal" style="transition-delay:0.2s;border-color:rgba(16,185,129,0.3)">
-                <div class="role-icon" style="background:rgba(16,185,129,0.12)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <!-- Pro (Featured) -->
+            <div class="role-card reveal" style="transition-delay:0.2s;border-color:rgba(26,86,219,0.6);background:linear-gradient(145deg,rgba(26,86,219,0.25),rgba(26,86,219,0.1));position:relative">
+                <div style="position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#F59E0B;color:#0B1426;font-size:11px;font-weight:800;padding:4px 16px;border-radius:20px;white-space:nowrap;letter-spacing:0.3px">⭐ Paling Populer</div>
+                <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.65);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">Pro</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:20px">Untuk bisnis yang berkembang</div>
+                <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:4px">
+                    <span style="font-size:15px;font-weight:700;color:#fff">Rp</span>
+                    <span style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1">299K</span>
                 </div>
-                <div class="role-badge" style="background:rgba(16,185,129,0.12);color:#10B981">🏪 Manager</div>
-                <div class="role-title">Manager / Admin</div>
-                <ul class="role-features">
-                    <li>Kelola produk, stok, dan harga</li>
-                    <li>Lihat & kelola semua transaksi</li>
-                    <li>Laporan penjualan, produk, customer</li>
-                    <li>Buat promo dan kode diskon</li>
-                    <li>Tambah dan kelola akun kasir</li>
+                <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:4px">/ bulan per bisnis</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:24px">5 kasir · 1 bisnis · produk unlimited</div>
+                <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:20px"></div>
+                <ul class="role-features" style="margin-bottom:28px">
+                    <li>Semua fitur Starter</li>
+                    <li>Manajemen stok lanjutan</li>
+                    <li>Data & histori customer</li>
+                    <li>Laporan & analitik lengkap</li>
+                    <li>Nota digital via WhatsApp</li>
+                    <li>Promo & kode diskon</li>
+                    <li>Support prioritas WA</li>
                 </ul>
+                <a href="{{ route('register') }}" style="display:block;width:100%;padding:12px;text-align:center;border-radius:10px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,#1A56DB,#3B82F6);text-decoration:none;transition:all 0.2s;box-shadow:0 4px 20px rgba(26,86,219,0.4)" onmouseover="this.style.boxShadow='0 6px 28px rgba(26,86,219,0.6)'" onmouseout="this.style.boxShadow='0 4px 20px rgba(26,86,219,0.4)'">Coba 14 Hari Gratis</a>
             </div>
 
-            <!-- Kasir -->
-            <div class="role-card reveal" style="transition-delay:0.3s;border-color:rgba(96,165,250,0.3)">
-                <div class="role-icon" style="background:rgba(96,165,250,0.12)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="12" y1="10" x2="14" y2="10"/></svg>
+            <!-- Business -->
+            <div class="role-card reveal" style="transition-delay:0.3s;border-color:rgba(255,255,255,0.1);position:relative">
+                <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">Business</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px">Untuk jaringan multi-bisnis</div>
+                <div style="display:flex;align-items:baseline;gap:4px;margin-bottom:4px">
+                    <span style="font-size:15px;font-weight:700;color:#fff">Rp</span>
+                    <span style="font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1">799K</span>
                 </div>
-                <div class="role-badge" style="background:rgba(96,165,250,0.12);color:#60A5FA">🧾 Kasir</div>
-                <div class="role-title">Kasir</div>
-                <ul class="role-features">
-                    <li>Antarmuka POS yang simpel dan cepat</li>
-                    <li>Proses transaksi tunai & transfer</li>
-                    <li>Cetak struk & kirim nota via WhatsApp</li>
-                    <li>Riwayat transaksi shift sendiri</li>
-                    <li>Update status lunas / belum lunas</li>
+                <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:4px">/ bulan hingga 5 bisnis</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:24px">Kasir unlimited · hingga 5 bisnis</div>
+                <div style="height:1px;background:rgba(255,255,255,0.07);margin-bottom:20px"></div>
+                <ul class="role-features" style="margin-bottom:28px">
+                    <li>Semua fitur Pro</li>
+                    <li>Dashboard multi-bisnis</li>
+                    <li>Manajemen tim & role</li>
+                    <li>Laporan konsolidasi bisnis</li>
+                    <li>API & integrasi custom</li>
+                    <li>Dedicated account manager</li>
                 </ul>
+                <a href="https://wa.me/6282269334494" target="_blank" style="display:block;width:100%;padding:12px;text-align:center;border-radius:10px;font-size:14px;font-weight:700;color:#60a5fa;border:1.5px solid rgba(96,165,250,0.4);text-decoration:none;transition:all 0.2s;background:transparent" onmouseover="this.style.background='rgba(96,165,250,0.1)'" onmouseout="this.style.background='transparent'">Hubungi Sales</a>
             </div>
         </div>
     </div>
@@ -1478,7 +1503,7 @@
                 <ul class="footer-links">
                     <li><a href="#fitur">Fitur</a></li>
                     <li><a href="#cara-kerja">Cara Kerja</a></li>
-                    <li><a href="#role">Level Akses</a></li>
+                    <li><a href="#harga">Harga</a></li>
                     <li><a href="#testimoni">Testimoni</a></li>
                 </ul>
             </div>

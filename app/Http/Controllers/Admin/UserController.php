@@ -19,6 +19,11 @@ class UserController extends Controller
  
     public function store(Request $request)
     {
+        $business = auth()->user()->business;
+
+        if (!$business->canAddKasir()) {
+            return back()->with('error', 'Batas jumlah kasir untuk paket ' . ucfirst($business->paket) . ' sudah tercapai. Silakan upgrade paket.');
+        }
         $request->validate([
             'name'     => 'required|string|max:100',
             'email'    => 'required|email|unique:users,email',

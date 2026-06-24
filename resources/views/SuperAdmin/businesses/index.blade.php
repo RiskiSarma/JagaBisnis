@@ -58,12 +58,33 @@
                 </td>
                 <td class="px-5 py-4">
                     <div class="flex items-center gap-2">
-                        <form method="POST" action="{{ route('sa.businesses.toggle-status', $b) }}">
-                            @csrf @method('PATCH')
-                            <button type="submit" class="text-xs {{ $b->status==='active'?'bg-emerald-500 hover:bg-red-500':'bg-slate-300 hover:bg-emerald-500' }} text-white px-3 py-1.5 rounded-lg font-bold transition-colors">
-                                {{ $b->status==='active'?'Aktif':'Off' }}
+                        {{-- Ganti form toggle-status yang lama dengan ini --}}
+                        @php
+                            $hasActiveSub = $b->subscription_status === 'active'
+                                && $b->subscription_ends_at
+                                && $b->subscription_ends_at->isFuture()
+                                && $b->paket !== 'starter';
+                        @endphp
+
+                        @if($b->status === 'active' && $hasActiveSub)
+                            {{-- Bisnis aktif + punya langganan berbayar aktif: tampilkan warning modal --}}
+                            <button type="button"
+                                onclick="confirmDeactivate({{ $b->id }}, '{{ addslashes($b->name) }}', '{{ $b->paket }}', '{{ $b->subscription_ends_at->translatedFormat('d M Y') }}')"
+                                class="text-xs bg-emerald-500 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg font-bold transition-colors">
+                                Aktif
                             </button>
-                        </form>
+                            {{-- Form hidden untuk submit setelah konfirmasi --}}
+                            <form id="toggle-form-{{ $b->id }}" method="POST" action="{{ route('sa.businesses.toggle-status', $b) }}" class="hidden">
+                                @csrf @method('PATCH')
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('sa.businesses.toggle-status', $b) }}">
+                                @csrf @method('PATCH')
+                                <button type="submit" class="text-xs {{ $b->status==='active'?'bg-emerald-500 hover:bg-red-500':'bg-slate-300 hover:bg-emerald-500' }} text-white px-3 py-1.5 rounded-lg font-bold transition-colors">
+                                    {{ $b->status==='active'?'Aktif':'Off' }}
+                                </button>
+                            </form>
+                        @endif
                         <form method="POST" action="{{ route('sa.businesses.destroy', $b) }}" onsubmit="return confirm('Hapus bisnis ini?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="text-xs bg-red-50 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1.5 rounded-lg font-bold transition-colors">Hapus</button>
@@ -113,4 +134,56 @@
         </div>
     </div>
 </div>
+{{-- Modal Warning Nonaktifkan Bisnis Berlangganan --}}
+<div id="modalDeactivateWarning" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl p-6">
+        <div class="flex items-start gap-4 mb-5">
+            <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-500/15 flex items-center justify-center shrink-0">
+                <i class="bi bi-exclamation-triangle-fill text-amber-600 dark:text-amber-400 text-xl"></i>
+            </div>
+            <div>
+                <h3 class="font-extrabold text-slate-900 dark:text-white text-base">Nonaktifkan Bisnis Berlangganan?</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Perhatikan informasi berikut sebelum melanjutkan.</p>
+            </div>
+        </div>
+
+        <div class="bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-700 rounded-xl p-4 mb-5 space-y-1.5">
+            <p class="text-sm font-bold text-amber-800 dark:text-amber-300" id="warningBusinessName"></p>
+            <p class="text-sm text-amber-700 dark:text-amber-400" id="warningSubInfo"></p>
+            <p class="text-xs text-amber-600 dark:text-amber-500 mt-2">
+                ⚠️ Bisnis ini masih memiliki masa langganan berbayar yang aktif. Menonaktifkan secara sepihak dapat menyebabkan keluhan dari pelanggan.
+            </p>
+        </div>
+
+        <p class="text-sm text-slate-600 dark:text-slate-300 mb-5">
+            Apakah Anda yakin ingin menonaktifkan bisnis ini? Pengguna tidak akan dapat mengakses aplikasi meskipun langganan mereka masih berlaku.
+        </p>
+
+        <div class="flex gap-3 justify-end">
+            <button type="button"
+                onclick="document.getElementById('modalDeactivateWarning').classList.add('hidden')"
+                class="px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-300">
+                Batal
+            </button>
+            <button type="button" id="btnConfirmDeactivate"
+                class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold transition-colors">
+                Ya, Nonaktifkan
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDeactivate(businessId, businessName, paket, endsAt) {
+    document.getElementById('warningBusinessName').textContent = '🏢 ' + businessName;
+    document.getElementById('warningSubInfo').textContent =
+        'Paket ' + paket.toUpperCase() + ' aktif hingga ' + endsAt;
+
+    document.getElementById('btnConfirmDeactivate').onclick = function () {
+        document.getElementById('toggle-form-' + businessId).submit();
+    };
+
+    document.getElementById('modalDeactivateWarning').classList.remove('hidden');
+}
+</script>
 @endsection

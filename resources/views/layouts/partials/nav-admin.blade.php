@@ -4,6 +4,8 @@ function navLink($route, $label, $active = false) {
     return '';
 }
 @endphp
+
+@php $business = auth()->user()->business; @endphp
  
 <p class="px-2 pt-3 pb-1 text-[9px] font-bold text-slate-400 dark:text-white/20 uppercase tracking-widest">Bisnis Saya</p>
  
@@ -56,6 +58,7 @@ function navLink($route, $label, $active = false) {
     <span>Lap. Penjualan</span>
 </a>
 
+@if($business->hasFeature('laporan_lengkap'))
 <a href="{{ route('admin.reports.products') }}" 
    class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 
    {{ request()->routeIs('admin.reports.products') 
@@ -78,9 +81,11 @@ function navLink($route, $label, $active = false) {
     </svg>
     <span>Lap. Customer</span>
 </a>
+@endif
  
 <p class="px-2 pt-4 pb-1 text-[9px] font-bold text-slate-400 dark:text-white/20 uppercase tracking-widest">Lainnya</p>
 
+@if($business->hasFeature('promo'))
 <a href="{{ route('admin.promos.index') }}" 
    class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 
    {{ request()->routeIs('admin.promos*') 
@@ -93,7 +98,9 @@ function navLink($route, $label, $active = false) {
     </svg>
     <span>Set Promo</span>
 </a>
+@endif
 
+@if($business->hasFeature('customer'))
 <a href="{{ route('admin.customers.index') }}" 
    class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 
    {{ request()->routeIs('admin.customers*') 
@@ -104,8 +111,9 @@ function navLink($route, $label, $active = false) {
     </svg>
     <span>Customer</span>
 </a>
+@endif
 
-<a href="{{ route('admin.kasirs.index') }}" 
+<a href="{{ route('admin.kasirs.index') }}" {{-- selalu tampil, semua paket boleh kelola kasir (sesuai limit) --}}
    class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 
    {{ request()->routeIs('admin.kasirs*') 
       ? 'bg-brand/10 dark:bg-brand/40 text-brand' 
@@ -115,4 +123,27 @@ function navLink($route, $label, $active = false) {
         <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
     </svg>
     <span>Kelola Kasir</span>
+</a>
+
+<a href="{{ route('admin.subscription.index') }}" 
+   class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 
+   {{ request()->routeIs('admin.subscription*') 
+      ? 'bg-brand/10 dark:bg-brand/40 text-brand' 
+      : 'text-slate-600 dark:text-white/45 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-800 dark:hover:text-white' }}">
+    <i class="bi bi-credit-card text-sm"></i>
+    <span>Subscription</span>
+</a>
+<a href="{{ route('admin.midtrans-setting.index') }}" 
+   class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 
+   {{ request()->routeIs('admin.midtrans-setting*') 
+      ? 'bg-brand/10 dark:bg-brand/40 text-brand' 
+      : 'text-slate-600 dark:text-white/45 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-800 dark:hover:text-white' }}">
+    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+        <line x1="1" y1="10" x2="23" y2="10"/>
+        <path d="M18 14h.01"/>
+        <path d="M14 14h.01"/>
+        <path d="M10 14h.01"/>
+    </svg>
+    <span>Pembayaran</span>
 </a>

@@ -34,6 +34,11 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $business = auth()->user()->business;
+
+        if (!$business->canAddProduk()) {
+            return back()->with('error', 'Batas jumlah produk untuk paket ' . ucfirst($business->paket) . ' sudah tercapai. Silakan upgrade paket.');
+        }
         $data = $request->validate([
             'name'       => 'required|string|max:100',
             'price'      => 'required|integer|min:0',
